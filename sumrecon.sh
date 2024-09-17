@@ -21,11 +21,11 @@
         exit 1
     fi
 
-    if [ ! -x "$(find / -type f -name 'EyeWitness')" ];then
-        echo "[-] Eyewitness required to run script"
+    if [ ! -x "$(command -v eyewitness)" ]; then
+        echo "[-] eyewitness required to run script"
         exit 1
     fi
- 
+
     if [ ! -x "$(command -v httprobe)" ]; then
         echo "[-] httprobe required to run script"
         exit 1
@@ -40,7 +40,17 @@
         echo "[-] whatweb required to run script"
         exit 1
     fi
-    
+
+    if [ ! -x "$(command -v certspotter)" ]; then
+            echo "[-] certspotter required to run script"
+            exit 1
+    fi
+
+    if [ ! -x "$(command -v subjack)" ]; then
+            echo "[-] subjack required to run script"
+            exit 1
+    fi
+
     if [ ! -d "$url" ];then
         mkdir $url
     fi
@@ -164,5 +174,4 @@
     nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt
     
     echo "[+] Running eyewitness against all compiled domains..."
-    eyewitness=$(find / -type f -name 'EyeWitness.py')
-    python3 $eyewitness --web -f $url/recon/httprobe/alive.txt -d $url/recon/eyewitness --resolve --no-prompt
+    eyewitness --web -f $url/recon/httprobe/alive.txt -d $url/recon/eyewitness --resolve --no-prompt
